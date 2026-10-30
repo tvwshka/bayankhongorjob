@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="mn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Баянхонгор JOB</title>
+<meta name="description" content="Баянхонгор аймгийн ажлын байрны зарын платформ">
+<style>
+:root{--green:#087a43;--green2:#0b9654;--pale:#eaf8ef;--ink:#18352a;--muted:#64756b;--line:#dce9e0;--white:#fff}
+*{box-sizing:border-box}body{margin:0;background:#f5faf6;color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+header{background:linear-gradient(120deg,#056b3b,#12a15b);color:white;padding:22px max(18px,calc((100% - 1120px)/2));}
+.brand{display:flex;align-items:center;gap:12px}.logo{width:48px;height:48px;border-radius:15px;background:#fff;color:var(--green);display:grid;place-items:center;font-weight:900;font-size:20px}.brand h1{margin:0;font-size:24px}.brand p{margin:3px 0 0;color:#e1f7e9;font-size:13px}
+main{max-width:1120px;margin:24px auto;padding:0 18px}.hero{padding:26px;border-radius:22px;background:var(--pale);margin-bottom:22px}.hero h2{font-size:clamp(23px,4vw,34px);margin:0 0 8px}.hero p{color:var(--muted);margin:0}
+.layout{display:grid;grid-template-columns:1fr 320px;gap:22px}.panel{background:white;border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 5px 20px #12321a08}.panel h3{margin:0 0 14px}
+.filters{display:grid;grid-template-columns:1fr 180px;gap:10px;margin-bottom:16px}input,select,textarea,button{font:inherit}input,select,textarea{width:100%;border:1px solid #cbdcd0;border-radius:11px;padding:11px 12px;background:white;color:var(--ink)}textarea{min-height:86px;resize:vertical}button{border:0;border-radius:11px;padding:11px 14px;background:var(--green);color:white;font-weight:700;cursor:pointer}button:hover{background:#056234}.secondary{background:#e9f6ed;color:var(--green)}.secondary:hover{background:#d8efdf}.job{padding:16px 0;border-top:1px solid var(--line)}.job:first-of-type{border-top:0}.jobtop{display:flex;justify-content:space-between;gap:12px}.job h4{margin:0 0 5px;font-size:18px}.meta{font-size:13px;color:var(--muted);line-height:1.7}.salary{font-weight:800;color:var(--green);white-space:nowrap}.tag{display:inline-block;background:#e9f6ed;color:var(--green);padding:4px 8px;border-radius:20px;font-size:12px;margin-top:8px}.job p{margin:9px 0;color:#40594b;font-size:14px}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.formgrid{display:grid;gap:10px}.hint{font-size:12px;color:var(--muted);line-height:1.6}.empty{padding:25px 5px;text-align:center;color:var(--muted)}footer{text-align:center;padding:28px;color:var(--muted);font-size:12px}
+[hidden]{display:none!important}.callbtn{display:inline-block;border-radius:11px;padding:11px 14px;background:var(--green);color:white;font-weight:700;text-decoration:none}.callbtn:hover{background:#056234}.danger{background:#fdecec;color:#b42318}.danger:hover{background:#f9d6d6}aside .panel+.panel{margin-top:22px}.count{font-size:13px;color:var(--muted);font-weight:400}.msg{font-size:13px;margin:0;min-height:1em}.msg.ok{color:var(--green)}.msg.err{color:#b42318}.hp{position:absolute;left:-9999px}.adminbar{display:none;background:#fff7e6;border:1px solid #f3d9a4;color:#7a4d00;border-radius:11px;padding:9px 12px;font-size:13px;margin-bottom:12px}body.is-admin .adminbar{display:block}
+@media(max-width:800px){.layout{grid-template-columns:1fr}.filters{grid-template-columns:1fr}.brand h1{font-size:20px}.hero{padding:21px}}
+</style>
+</head>
+<body>
+<header><div class="brand"><div class="logo">BJ</div><div><h1>БАЯНХОНГОР JOB</h1><p>Баянхонгорын хөгжилд хамтдаа!</p></div></div></header>
+<main>
+<section class="hero"><h2>Танд тохирох ажлаа олоорой 🌿</h2><p>Баянхонгор аймгийн ажлын байрны зар — эхний шатанд үнэгүй.</p></section>
+<div class="layout">
+<section class="panel"><h3>Ажлын зарууд <span class="count" id="count"></span></h3>
+<div class="adminbar">🔐 Админ горим идэвхтэй — зар бүрийн доор “Устгах” товч харагдана.</div>
+<div class="filters"><input id="search" placeholder="Ажлын байр, байгууллага хайх..."><select id="district"><option value="">Бүх байршил</option><option>Баянхонгор сум</option><option>Баян-Овоо сум</option><option>Баянцагаан сум</option><option>Богд сум</option><option>Бөмбөгөр сум</option><option>Жаргалант сум</option><option>Жинст сум</option><option>Заг сум</option><option>Галуут сум</option><option>Гурванбулаг сум</option><option>Өлзийт сум</option><option>Хүрээмарал сум</option><option>Шинэжинст сум</option><option>Эрдэнэцогт сум</option><option>Бууцагаан сум</option><option>Баянлиг сум</option><option>Баян-Өндөр сум</option><option>Баянговь сум</option></select></div>
+<div id="jobs"></div>
+</section>
+<aside><div class="panel"><h3>➕ Ажил олгогч зар оруулах</h3>
+<form id="jobForm" class="formgrid">
+<input name="company" required maxlength="120" placeholder="Байгууллагын нэр / ажил олгогч">
+<input name="title" required maxlength="120" placeholder="Ажлын байрны нэр">
+<select name="district" required><option value="">Сум сонгох</option><option>Баянхонгор сум</option><option>Баян-Овоо сум</option><option>Баянцагаан сум</option><option>Богд сум</option><option>Бөмбөгөр сум</option><option>Жаргалант сум</option><option>Жинст сум</option><option>Заг сум</option><option>Галуут сум</option><option>Гурванбулаг сум</option><option>Өлзийт сум</option><option>Хүрээмарал сум</option><option>Шинэжинст сум</option><option>Эрдэнэцогт сум</option><option>Бууцагаан сум</option><option>Баянлиг сум</option><option>Баян-Өндөр сум</option><option>Баянговь сум</option></select>
+<input name="salary" maxlength="60" placeholder="Цалин (жишээ: 1,500,000₮)">
+<select name="type"><option>Бүтэн цагийн</option><option>Цагийн ажил</option><option>Гэрээт</option><option>Ээлжийн</option></select>
+<input name="phone" type="tel" required maxlength="30" pattern="[0-9+\-\s()]{6,30}" placeholder="Холбоо барих утас (жишээ: 99112233)">
+<textarea name="description" maxlength="3000" placeholder="Ажлын тухай дэлгэрэнгүй"></textarea>
+<input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+<button type="submit" id="publishBtn">Зар нийтлэх</button>
+<p class="msg" id="formMsg" role="status"></p>
+<p class="hint">Нийтэлсэн зар онлайн өгөгдлийн санд хадгалагдаж, бүх зочдод шууд харагдана.</p>
+</form></div>
+<div class="panel" id="admin"><h3>🔐 Админ</h3>
+<form id="adminForm" class="formgrid">
+<input id="adminPass" type="password" required autocomplete="current-password" placeholder="Админ нууц үг">
+<button type="submit">Нэвтрэх</button>
+</form>
+<div id="adminOn" class="formgrid" hidden>
+<p class="hint">Та админаар нэвтэрсэн байна. Дээрх маягтаар зар нэмж, жагсаалтаас зар устгах боломжтой.</p>
+<button type="button" class="secondary" id="adminLogout">Гарах</button>
+</div>
+<p class="msg" id="adminMsg" role="status"></p>
+</div></aside>
+</div>
+</main>
+<footer>© Баянхонгор JOB · Хуурамч зар, урьдчилгаа мөнгө нэхсэн саналаас болгоомжилно уу.</footer>
+<script>
+const seed = [
+ {id:"demo1",title:"Худалдагч",company:"Жишээ байгууллага",district:"Баянхонгор сум",salary:"1,500,000₮",type:"Бүтэн цагийн",phone:"",description:"Энэ бол интерфэйс харуулах зориулалттай жишээ зар. Бодит ажлын байр биш.",demo:true},
+ {id:"demo2",title:"Жолооч",company:"Жишээ байгууллага",district:"Баянхонгор сум",salary:"Тохиролцоно",type:"Бүтэн цагийн",phone:"",description:"Жишээ зар — бодит ажлын байр биш.",demo:true}
+];
+let jobs=[], loaded=false, loadError=false;
+let adminPass=sessionStorage.getItem("bj_admin")||"";
+const jobsEl=document.getElementById("jobs");
+const safe=s=>String(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const telHref=p=>String(p||"").replace(/[^0-9+]/g,"");
+const fmtDate=d=>{try{return new Date(d).toLocaleDateString("mn-MN")}catch(e){return ""}};
+function setMsg(el,text,ok){el.textContent=text;el.className="msg "+(ok?"ok":"err")}
+async function loadJobs(){
+ try{const r=await fetch("/api/jobs");if(!r.ok)throw 0;jobs=await r.json();loadError=false}
+ catch(e){loadError=true}
+ loaded=true;render();
+}
+function render(){
+ if(!loaded){jobsEl.innerHTML="<div class='empty'>Зарууд ачааллаж байна...</div>";return}
+ const q=document.getElementById("search").value.trim().toLowerCase(), d=document.getElementById("district").value;
+ const list=jobs.length?jobs:seed;
+ const filtered=list.filter(j=>(!q||(j.title+" "+j.company+" "+j.district+" "+j.salary+" "+j.description).toLowerCase().includes(q))&&(!d||j.district===d));
+ document.getElementById("count").textContent=jobs.length?`(${filtered.length} / ${jobs.length})`:"";
+ jobsEl.innerHTML=loadError?"<div class='empty'>Зарууд ачааллахад алдаа гарлаа. Хуудсаа дахин ачаална уу.</div>":filtered.length?"":"<div class='empty'>Тохирох зар олдсонгүй. Хайлтаа өөрчлөх эсвэл шинэ зар оруулна уу.</div>";
+ if(loadError)return;
+ const admin=document.body.classList.contains("is-admin");
+ filtered.forEach(j=>{
+  const el=document.createElement("article");el.className="job";
+  el.innerHTML=`<div class="jobtop"><div><h4>${safe(j.title)}</h4><div class="meta">${safe(j.company)} · 📍 ${safe(j.district)}${j.createdAt?" · 🗓 "+safe(fmtDate(j.createdAt)):""}</div></div><div class="salary">${safe(j.salary||"Тохиролцоно")}</div></div>${j.type?`<span class="tag">${safe(j.type)}</span>`:""}<p>${safe(j.description||"Дэлгэрэнгүй мэдээллийг ажил олгогчоос авна уу.")}</p>${j.demo?'<div class="hint">Жишээ зар — бодит ажлын байр биш.</div>':`<div class="actions"><a class="callbtn" href="tel:${safe(telHref(j.phone))}">📞 ${safe(j.phone)}</a>${admin?`<button type="button" class="danger" data-delete="${safe(j.id)}">🗑 Устгах</button>`:""}</div>`}`;
+  jobsEl.appendChild(el);
+ });
+}
+document.getElementById("jobForm").addEventListener("submit",async e=>{
+ e.preventDefault();
+ const form=e.target, btn=document.getElementById("publishBtn"), msg=document.getElementById("formMsg");
+ const data=Object.fromEntries(new FormData(form).entries());
+ btn.disabled=true;btn.textContent="Нийтэлж байна...";
+ try{
+  const r=await fetch("/api/jobs",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(data)});
+  const res=await r.json().catch(()=>({}));
+  if(!r.ok)throw new Error(res.error||"Зар нийтлэхэд алдаа гарлаа.");
+  jobs.unshift(res);form.reset();render();
+  setMsg(msg,"✅ Таны зар амжилттай нийтлэгдлээ. Бүх зочдод харагдана.",true);
+  jobsEl.scrollIntoView({behavior:"smooth"});
+ }catch(err){setMsg(msg,err.message||"Зар нийтлэхэд алдаа гарлаа.",false)}
+ finally{btn.disabled=false;btn.textContent="Зар нийтлэх"}
+});
+jobsEl.addEventListener("click",async e=>{
+ const id=e.target.dataset.delete;
+ if(!id||!confirm("Энэ зарын устгалтыг батлах уу?"))return;
+ const r=await fetch("/api/jobs/"+encodeURIComponent(id),{method:"DELETE",headers:{"x-admin-password":adminPass}});
+ if(r.ok){jobs=jobs.filter(j=>String(j.id)!==id);render()}
+ else{if(r.status===401)setAdmin(false);alert("Устгах боломжгүй. Админаар дахин нэвтэрнэ үү.")}
+});
+function setAdmin(on){
+ document.body.classList.toggle("is-admin",on);
+ document.getElementById("adminForm").hidden=on;
+ document.getElementById("adminOn").hidden=!on;
+ if(!on){adminPass="";sessionStorage.removeItem("bj_admin")}
+ render();
+}
+async function checkAdmin(pass){
+ const r=await fetch("/api/admin",{method:"POST",headers:{"x-admin-password":pass}});
+ const res=await r.json().catch(()=>({}));
+ return {ok:r.ok,error:res.error};
+}
+document.getElementById("adminForm").addEventListener("submit",async e=>{
+ e.preventDefault();
+ const pass=document.getElementById("adminPass").value, msg=document.getElementById("adminMsg");
+ const res=await checkAdmin(pass).catch(()=>({ok:false}));
+ if(res.ok){adminPass=pass;sessionStorage.setItem("bj_admin",pass);e.target.reset();setAdmin(true);setMsg(msg,"Амжилттай нэвтэрлээ.",true)}
+ else setMsg(msg,res.error||"Нэвтрэх боломжгүй.",false);
+});
+document.getElementById("adminLogout").addEventListener("click",()=>{setAdmin(false);document.getElementById("adminMsg").textContent=""});
+document.getElementById("search").addEventListener("input",render);
+document.getElementById("district").addEventListener("change",render);
+render();loadJobs();
+if(adminPass)checkAdmin(adminPass).then(r=>setAdmin(r.ok)).catch(()=>{});
+</script>
+</body>
+</html>
